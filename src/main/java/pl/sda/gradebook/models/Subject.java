@@ -1,9 +1,9 @@
 package pl.sda.gradebook.models;
 
-import org.apache.commons.collections4.MultiValuedMap;
-import org.apache.commons.collections4.multimap.ArrayListValuedHashMap;
-
-import java.util.Collection;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class Subject {
 
@@ -11,7 +11,7 @@ public class Subject {
 
     private final String name;
     private final String lecturer;
-    private final MultiValuedMap<Student, Grade> grades = new ArrayListValuedHashMap<Student, Grade>();
+    private final Map<Student, List<Grade>> grades = new HashMap<>();
     private final int id;
 
     public Subject(String name, String lecturer) {
@@ -21,10 +21,10 @@ public class Subject {
     }
 
     public void addGrade(Student student, Grade grade) {
-        this.grades.put(student, grade);
+        this.grades.computeIfAbsent(student, k -> new ArrayList<>()).add(grade);
     }
 
-    public Collection<Grade> getGrades(Student student) {
+    public List<Grade> getGrades(Student student) {
         return grades.get(student);
     }
 
@@ -34,14 +34,6 @@ public class Subject {
 
     public String getLecturer() {
         return lecturer;
-    }
-
-    public MultiValuedMap<Student, Grade> getGrades() {
-        return grades;
-    }
-
-    public int getId() {
-        return id;
     }
 
     @Override
@@ -54,16 +46,25 @@ public class Subject {
         if (id != subject.id) return false;
         if (name != null ? !name.equals(subject.name) : subject.name != null) return false;
         if (lecturer != null ? !lecturer.equals(subject.lecturer) : subject.lecturer != null) return false;
-        return grades.equals(subject.grades);
+        return grades != null ? grades.equals(subject.grades) : subject.grades == null;
     }
 
     @Override
     public int hashCode() {
         int result = name != null ? name.hashCode() : 0;
         result = 31 * result + (lecturer != null ? lecturer.hashCode() : 0);
-        result = 31 * result + grades.hashCode();
+        result = 31 * result + (grades != null ? grades.hashCode() : 0);
         result = 31 * result + id;
         return result;
+    }
+
+    public Map<Student, List<Grade>> getGrades() {
+        return grades;
+
+    }
+
+    public int getId() {
+        return id;
     }
 
     @Override

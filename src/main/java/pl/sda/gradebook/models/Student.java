@@ -6,9 +6,9 @@ public class Student {
 
     private final String name;
     private final LocalDate dateOfBirth;
-    private final int indexNumber;
+    private final long indexNumber;
 
-    public Student(String name, LocalDate dateOfBirth, int indexNumber) {
+    public Student(String name, LocalDate dateOfBirth, long indexNumber) {
         this.name = name;
         this.dateOfBirth = dateOfBirth;
         this.indexNumber = indexNumber;
@@ -22,7 +22,7 @@ public class Student {
         return dateOfBirth;
     }
 
-    public int getIndexNumber() {
+    public long getIndexNumber() {
         return indexNumber;
     }
 
@@ -51,7 +51,7 @@ public class Student {
     public int hashCode() {
         int result = name != null ? name.hashCode() : 0;
         result = 31 * result + (dateOfBirth != null ? dateOfBirth.hashCode() : 0);
-        result = 31 * result + indexNumber;
+        result = 31 * result + (int) (indexNumber ^ (indexNumber >>> 32));
         return result;
     }
 }
